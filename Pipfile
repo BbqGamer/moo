@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = false
+name = "pip_conf_index_global"
+
+[packages]
+numpy = "*"
+cvxopt = "*"
+pandas = "*"
+matplotlib = "*"
+scikit-learn = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
