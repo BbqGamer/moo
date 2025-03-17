@@ -9,6 +9,7 @@ cvxopt = "*"
 pandas = "*"
 matplotlib = "*"
 scikit-learn = "*"
+statsmodels = "*"
 
 [dev-packages]
 
