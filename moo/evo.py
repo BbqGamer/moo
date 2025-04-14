@@ -368,9 +368,15 @@ def nsga2_markowitz(
     hypervolume_list = []
 
     pop_evaluated = [(ind, evaluate(ind, problem)) for ind in initial_population]
+    best_hv = -float("inf")
+
     for gen in range(num_generations):
         hv = hypervolume([np.array(p[1]) for p in pop_evaluated])
         computed = hv.compute([1] * len(pop_evaluated[0][1]))
+        if computed > best_hv:
+            best_hv = computed
+            best_pop = pop_evaluated[:]
+
         hypervolume_list.append(computed)
         offspring = []
         while len(offspring) < pop_size:
@@ -392,7 +398,7 @@ def nsga2_markowitz(
         combined = pop_evaluated + offspring
         pop_evaluated = make_new_population(combined, pop_size)
 
-    return pop_evaluated, hypervolume_list
+    return best_pop, hypervolume_list
 
 
 def sbx_crossover_simplex(parent1, parent2, eta=15):
@@ -626,17 +632,7 @@ def read_asset_data(file_path):
     return asset_name, data
 
 
-Result = namedtuple(
-    "Result",
-    [
-        "init_pop_func",
-        "crossover_func",
-        "mutation_func",
-        "popsize",
-        "hypervolume",
-        "final_pop",
-    ],
-)
+NUM_GENERATIONS = 100
 
 if __name__ == "__main__":
     asset_data = {}
@@ -689,10 +685,10 @@ if __name__ == "__main__":
                     )
                     print("=========================================")
                     results.append(
-                        Result(
-                            init_pop_func,
-                            crossover_func,
-                            mutation_func,
+                        (
+                            init_pop_func.__name__,
+                            crossover_func.__name__,
+                            mutation_func.__name__,
                             popsize,
                             hypervolumes,
                             final_pop,
